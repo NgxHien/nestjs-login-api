@@ -6,5 +6,5 @@ export declare class AuthService {
     constructor(jwtService: JwtService);
     generateJWT(user: IUser): Observable<string>;
     hashPassword(password: string): Observable<string>;
-    comparePasswords(newPassword: string, passwordHash: string): Observable<any | boolean>;
+    comparePasswords(newPassword: string, passwordHash: string): Observable<any | boolean>;z
 }

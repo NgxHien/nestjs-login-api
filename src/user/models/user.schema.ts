@@ -1,11 +1,13 @@
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { IsEmail, IsNotEmpty } from 'class-validator';
 import { Document } from 'mongoose';
 
 export type UserDocument = User & Document;
 
 @Schema()
 export class User {
+
     @Prop({ required: true })
     fullName: string;
 
@@ -22,7 +24,7 @@ export class User {
     phone: string;
 
     @Prop()
-    status: boolean;
+    status: string;
 
     @Prop({ default: "https://image-uploader.sidz.tools/images/1590054460710-user.jpg" })
     picture_url: string;

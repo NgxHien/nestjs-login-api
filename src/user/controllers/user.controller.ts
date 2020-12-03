@@ -1,8 +1,8 @@
-import { Body, Controller, Delete, Get, Param, Post, Request } from '@nestjs/common';
-import { AuthService } from '../../auth/service/auth.service';
+import { Body, Controller, Delete, Get, Param, Post, Request, UseGuards } from '@nestjs/common';
 import { CreateUserDto, LoginUserDto } from '../dto/user.dto';
 import { User } from '../models/user.schema';
 import { UserService } from '../service/user.service';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('user')
 export class UserController {
@@ -21,13 +21,15 @@ export class UserController {
   }
 
   @Post('update')
-  async update(@Body() user: CreateUserDto) {
-    return await this.usersService.update(user);
+  @UseGuards(AuthGuard())
+  async update(@Request() req) {
+    return await this.usersService.update(req.body);
   }
 
   @Delete('delete')
-  async delete(@Body() { email }) {
-    return await this.usersService.delete(email);
+  @UseGuards(AuthGuard())
+  async delete(@Request() req) {
+    return await this.usersService.delete(req.body.email);
   }
 
   @Get(':id')

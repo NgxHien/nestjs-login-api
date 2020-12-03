@@ -1,12 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { User } from '../../user/models/user.schema';
+import { UserService } from '../../user/service/user.service';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly jwtService: JwtService) { }
+    private readonly jwtService: JwtService,
+  ) { }
 
   generateJWT(user: User) {
     return this.jwtService.signAsync({ user });
@@ -19,5 +21,4 @@ export class AuthService {
   comparePasswords(newPassword: string, passwordHash: string) {
     return bcrypt.compare(newPassword, passwordHash);
   }
-
 }

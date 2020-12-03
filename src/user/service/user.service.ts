@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { AuthService } from '../../auth/service/auth.service';
@@ -23,8 +23,8 @@ export class UserService {
       };
     }
     createUser.password = await this.authService.hashPassword(createUser.password);
-    createUser.status = false;
-    createUser.passwordUpdateTime = new Date(Date.now());
+    createUser.status = 'OFF';
+    createUser.passwordUpdateTime = new Date();
     createUser.save();
     const jwt = await this.authService.generateJWT(createUser);
     const success = { data: { regToken: jwt } };
@@ -49,6 +49,7 @@ export class UserService {
         message: "Wrong email or password!!!"
       }
     }
+    await this.userModel.updateOne({ email }, { status: 'ON' });
     const regToken = (await this.authService.generateJWT(user[0])).toString();
 
     return {
@@ -86,7 +87,9 @@ export class UserService {
         message: "You dont have account in system!!!"
       }
     }
-    await this.userModel.updateOne({ email }, { password, fullName, phone });
+    const hashPassword = await this.authService.hashPassword(password);
+    console.log(hashPassword);
+    await this.userModel.updateOne({ email }, { password: hashPassword, fullName, phone });
     return { message: "Account updated" };
   }
 
@@ -97,4 +100,13 @@ export class UserService {
   async findAll(): Promise<User[]> {
     return this.userModel.find().exec();
   }
+
+  async validateUser(payload: any) {
+    const user = await this.userModel.find({ _id: payload._id });
+    if (!user) {
+      throw new HttpException('Invalid token', HttpStatus.UNAUTHORIZED);
+    }
+    return payload;
+  }
+
 }
