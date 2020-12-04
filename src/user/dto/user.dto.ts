@@ -1,4 +1,9 @@
-import { IsEmail, IsIn, IsNotEmpty } from "class-validator";
+import { IsEmail, IsEnum, IsNotEmpty } from "class-validator";
+
+export enum UserStatus {
+    active = 'active',
+    inactive = 'inactive'
+}
 
 export class CreateUserDto {
     readonly fullName: string;
@@ -14,8 +19,8 @@ export class CreateUserDto {
 
     readonly phone: string;
 
-    @IsIn(['ONLINE', 'OFFLINE'])
-    readonly status: string;
+    @IsEnum(UserStatus)
+    readonly status: UserStatus;
 
     readonly picture_url: string;
 }

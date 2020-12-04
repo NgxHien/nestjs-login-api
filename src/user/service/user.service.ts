@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { AuthService } from '../../auth/service/auth.service';
-import { CreateUserDto } from '../dto/user.dto';
+import { CreateUserDto, UserStatus } from '../dto/user.dto';
 import { User, UserDocument } from '../models/user.schema';
 
 
@@ -23,7 +23,7 @@ export class UserService {
       };
     }
     createUser.password = await this.authService.hashPassword(createUser.password);
-    createUser.status = 'ONLINE';
+    createUser.status = UserStatus.active;
     createUser.passwordUpdateTime = new Date();
     createUser.save();
     const jwt = await this.authService.generateJWT(createUser);
@@ -44,7 +44,7 @@ export class UserService {
         message: "Wrong email or password!!!"
       }
     }
-    await this.userModel.updateOne({ email }, { status: 'ONLINE' });
+    await this.userModel.updateOne({ email }, { status: UserStatus.inactive });
     const regToken = (await this.authService.generateJWT(user[0])).toString();
     return {
       regToken
