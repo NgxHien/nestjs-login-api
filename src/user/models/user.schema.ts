@@ -23,17 +23,11 @@ export class User {
     @Prop({ required: true })
     phone: string;
 
-    @Prop()
-    @IsIn(["ONLINE", "OFFLINE"])
-    status: Status;
+    @Prop({ enum: ['ONLINE', 'OFFLINE'] })
+    status: string;
 
     @Prop({ default: "https://image-uploader.sidz.tools/images/1590054460710-user.jpg" })
     picture_url: string;
-}
-
-export enum Status {
-    ONLINE = 'ONLINE',
-    OFFLINE = 'OFFLINE',
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
