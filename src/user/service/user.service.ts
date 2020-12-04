@@ -32,11 +32,6 @@ export class UserService {
   }
 
   async login(email: string, password: string) {
-    if (!email || !password) {
-      return {
-        message: "Missing argument"
-      };
-    }
     const user = await this.userModel.find({ email: email });
     if (!user.length) {
       return {
@@ -51,7 +46,6 @@ export class UserService {
     }
     await this.userModel.updateOne({ email }, { status: Status.ONLINE });
     const regToken = (await this.authService.generateJWT(user[0])).toString();
-
     return {
       regToken
     }

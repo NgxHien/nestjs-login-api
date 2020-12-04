@@ -4,6 +4,7 @@ export class CreateUserDto {
     readonly fullName: string;
 
     @IsEmail()
+    @IsNotEmpty()
     readonly email: string;
 
     @IsNotEmpty()
@@ -17,7 +18,11 @@ export class CreateUserDto {
 }
 
 export class LoginUserDto {
+
+    @IsEmail()
+    @IsNotEmpty()
     readonly email: string;
 
+    @IsNotEmpty()
     readonly password: string;
 }
