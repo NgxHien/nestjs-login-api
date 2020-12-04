@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty } from "class-validator";
+import { IsEmail, IsIn, IsNotEmpty } from "class-validator";
 
 export class CreateUserDto {
     readonly fullName: string;
@@ -10,10 +10,13 @@ export class CreateUserDto {
     @IsNotEmpty()
     readonly password: string;
 
-
     readonly passwordUpdateTime: Date;
+
     readonly phone: string;
+
+    @IsIn(['ONLINE', 'OFFLINE'])
     readonly status: string;
+
     readonly picture_url: string;
 }
 
